@@ -1,20 +1,20 @@
 <?php
 ////////////////////////////////////////////VARS AND CONTENT////////////////////////////////////
 
+$message = nl2br(htmlentities($_GET["message"], ENT_QUOTES, 'UTF-8'));
+
+//js
+$message = nl2br($_GET["message"]);
+$image_urls;
+$ready = false;
+$input_div = "link_input";
+$regex_pattern = '/([A-Fa-f0-9]{6})$/';
+
+//image settings
+$size = false;
+$aspect = false;
+
 function make(){
-	$message = nl2br(htmlentities($_GET["message"], ENT_QUOTES, 'UTF-8'));
-
-	//js
-	$message = nl2br($_GET["message"]);
-	$image_urls;
-	$ready = false;
-	$input_div = "link_input";
-	$regex_pattern = '/([A-Fa-f0-9]{6})$/';
-
-	//image settings
-	$size = false;
-	$aspect = false;
-
 	if (is_numeric($_GET["size"])){
 		if ($_GET["size"] < 2000){
 			$max_image_size = $_GET["size"];
@@ -81,12 +81,12 @@ function showSubmitHtml(){
 	global $error_message;
 	global $input_field_width;
 	global $input_div;
-	echo '<div style="position:absolute;top:50px;left:400px;"><br />NOTE: Dont bother trying Internet Explorer, however I recommend <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>, <a href="http://www.mozilla.org/en-US/firefox/new/">Firefox</a> or even <a href="http://www.apple.com/downloads/">Safari</a>.</div>
-	<div id="editor">
+	echo
+	'<div id="editor">
 		<form id="editor_form" action="index.php" method="get" onsubmit="return verifyInputFinalize('. $input_div .');">
 			<div id="settings_frame">
 				<div class="input_box">
-					Message: <br /><textarea rows="6" cols="30" type="text" name="message" placeholder="If this field is left blank, no message will be shown"></textarea>
+					Message: <br /><textarea rows="6" cols="30" name="message" placeholder="If this field is left blank, no message will be shown"></textarea>
 				</div>
 				<div class="input_box" title="Select your color settings my clicking on the inputfield">
 					Background Color: <br /><input type="text" name="background_color" class="color"><br />
@@ -114,7 +114,7 @@ function showSubmitHtml(){
 			'. $error_message .'
 			</div>
 		</form>
-		<input form="editor_form" value="Start" alt="Submit" type="submit" id="start_btn">
+		<input form="editor_form" value="Start" type="submit" id="start_btn">
 		</div>';
 		
 }

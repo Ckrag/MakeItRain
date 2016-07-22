@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
+		<title>The Image Rain</title>
+		<meta charset="UTF-8">
 		<script type="text/javascript" src="jscolor/jscolor.js"></script>
 		<script type="text/javascript" src="rain.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>

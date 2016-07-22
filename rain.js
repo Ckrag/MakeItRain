@@ -36,6 +36,8 @@ function removeLink(parrent, html_id, array_pos) {
 ////////////VERIFYYYY//////////////
 
 function verifyInput(element){
+	/*
+
 	var regex = /(\.gif|\.jpg|\.png|\.bmp|\.jpeg)+$/;
 	var verified = true;
 
@@ -44,8 +46,10 @@ function verifyInput(element){
 	}
 
 	imageExist(element, verified);
+	*/
 }
 
+/*
 function imageExist(element, verified) {
 	if (verified){
 		var img = new Image();
@@ -91,6 +95,7 @@ function verifyInputFinalize(){
 
     return valid;
 }
+*/
 
 function displayError(element_id, error, condition){
 	element = document.getElementById(element_id); //have to use string instead of DOM object :(
