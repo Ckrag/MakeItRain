@@ -1,0 +1,88 @@
+<style type="text/css">
+body {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+#textfield {
+	position:absolute;
+	margin-left:50%;
+	left:-250px;
+	top:30%;
+	width:500px;
+	z-index:100;
+	background-image:url('bg.png');
+	background-repeat:repeat;
+	border:2px solid;
+	border-radius:25px;
+	-moz-border-radius:25px;
+}
+
+#editor {
+	position:absolute;
+	margin-left:50%;
+	left:-450px;
+	top:30%;
+	width:900px;
+	z-index:100;
+	background-image:url('bg.png');
+	background-repeat:repeat;
+	border:2px solid;
+	border-radius:25px;
+	-moz-border-radius:25px;
+}
+
+#image_menu {
+	visibility:visible;
+}
+
+#textfield form {
+	margin:15px;
+}
+#textfield p {
+	margin:15px;
+}
+
+#editor form {
+	margin:15px;
+}
+#editor p {
+	margin:15px;
+}
+
+#canvas {
+	z-index:50;
+}
+
+#settings_frame {
+	width:100%;
+	height:200px;
+	position:relative;
+}
+
+#link_input {
+	width:100%;
+	float:left;
+	position:relative;
+}
+
+#start_btn {
+	right:0;
+	bottom:-115px;
+	position:absolute;
+}
+
+.input_box {
+	position:relative;
+	float:left;
+	margin-left:15px;
+	border:2px solid #ABABAB;
+}
+
+h2 {
+	text-align:center;
+}
+
+
+</style>
