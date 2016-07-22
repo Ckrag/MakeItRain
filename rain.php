@@ -4,11 +4,19 @@
 $message = nl2br(htmlentities($_GET["message"], ENT_QUOTES, 'UTF-8'));
 
 //js
-$message = nl2br($_GET["message"]);
+//$message = nl2br($_GET["message"]);
 $image_urls;
 $ready = false;
 $input_div = "link_input";
 $regex_pattern = '/([A-Fa-f0-9]{6})$/';
+$image_aspect;
+$max_image_size;
+$image_settings;
+$force_scale;
+$background_color;
+$font_color;
+$image_urls;
+$error_message;
 
 //image settings
 $size = false;
@@ -19,6 +27,21 @@ $error_wrong = "Error: Your image-links have to be an image file, and end in jpe
 $none_image_input = 6; //$none_image_input is a magic number for when the $_GET starts containing image URLs
 
 function make(){
+	
+	global $max_image_size;
+	global $size;
+	global $image_aspect;
+	global $aspect;
+	global $image_settings;
+	global $force_scale;
+	global $background_color;
+	global $font_color;
+	global $image_urls;
+	global $ready;
+	global $error_message;
+	global $regex_pattern;
+
+
 	if (is_numeric($_GET["size"])){
 		if ($_GET["size"] < 2000){
 			$max_image_size = $_GET["size"];
@@ -39,14 +62,14 @@ function make(){
 		$image_settings = false;
 	}
 
-	if ($_GET["force_scale"]=="true"){
+	if (isset($_GET['force_scale']) && $_GET["force_scale"]=="true"){
 		$force_scale = true;
 	} else {
 		$force_scale = false;
 	}
 
 	//color settings
-	if (preg_match($regex_pattern, $_GET["background_color"])){
+	if (isset($_GET['background_color']) && preg_match($regex_pattern, $_GET["background_color"])){
 		$background_color = "#" . $_GET["background_color"];
 	} else {
 		$background_color = "#FFFFFF";
@@ -60,15 +83,9 @@ function make(){
 
 	////////////////////////////////////////////TEMPLATE SELECTOR////////////////////////////////////
 	if (validateGets()) { //if $_GET isn't empty, validate input
-		global $image_urls;
 		$image_urls = createImgArray();
-		if (validateUrls($image_urls)){
-			$ready = true;
-			showContentHtml();
-		} else { //if validateUrls returns false, show error
-			$error_message = $error_wrong;
-			showSubmitHtml();
-		}
+		$ready = true;
+		showContentHtml();
 	} else { //if no $_GET show base template
 		showSubmitHtml();
 	}
@@ -137,7 +154,7 @@ function createImgArray(){
 		if (preg_match("/image/", $key)){
 			array_push($image_urls, $value);
 		}
-	}
+	}		
 	return $image_urls;
 }
 
@@ -153,58 +170,5 @@ function validateGets() {
 		$validate = false;
 	}
 	return $validate;
-}
-
-function checkExt($ext){
-	switch ($ext) {
-	case "jpg":
-		$valid_format = true;
-		break;
-	case "jpeg":
-		$valid_format = true;
-		break;
-	case "png":
-		$valid_format = true;
-		break;
-	case "gif":
-		$valid_format = true;
-		break;
-	case "bmp":
-		$valid_format = true;
-		break;
-	default:
-		$valid_format = false;
-	}
-	return $valid_format;
-
-}
-
-function validateUrls($img_url_array) {
-	$image = true;
-	$correct_format = true;
-	
-	foreach($img_url_array as $imageurl) {
-		$imagecheck = getimagesize($imageurl);
-		$pathinfo =  pathinfo($imageurl);
-		$ext = $pathinfo['extension'];
-
-		
-		//check if it's an image
-		if (!is_array($imagecheck)){
-			$image = false;
-		}
-		//if it has an acceptable format
-		
-		if(!checkExt($ext)){
-			$correct_format = false;
-		}
-		
-	}
-	
-	if($image && $correct_format) {
-		return true;
-	} else {
-		return false;
-	}
 }
 ?>
