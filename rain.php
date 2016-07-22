@@ -86,18 +86,18 @@ function showSubmitHtml(){
 		<form id="editor_form" action="index.php" method="get" onsubmit="return verifyInputFinalize('. $input_div .');">
 			<div id="settings_frame">
 				<div class="input_box">
-					Message: <br /><textarea rows="6" cols="30" name="message" placeholder="If this field is left blank, no message will be shown"></textarea>
+					Message: <br><textarea rows="6" cols="30" name="message" placeholder="If this field is left blank, no message will be shown"></textarea>
 				</div>
 				<div class="input_box" title="Select your color settings my clicking on the inputfield">
-					Background Color: <br /><input type="text" name="background_color" class="color"><br />
-					Font Color: <br /><input type="text" name="font_color" class="color" >
+					Background Color: <br><input type="text" name="background_color" class="color"><br>
+					Font Color: <br><input type="text" name="font_color" class="color" >
 				</div>
 				<div class="input_box">
-					Image Size: <br /><!--<button type=button id="image_menu_btn" onclick="addImageSize()">Show Image-properties</button>-->
+					Image Size: <br><!--<button type=button id="image_menu_btn" onclick="addImageSize()">Show Image-properties</button>-->
 					<div id="image_menu" title="Select your image settings">
 						<input type="radio" name="aspect" value="height" checked>Height<br>
-						<input type="radio" name="aspect" value="width">Width<br />
-						<input placeholder="Input max image size" type="text" name="size"><br />
+						<input type="radio" name="aspect" value="width">Width<br>
+						<input placeholder="Input max image size" type="text" name="size"><br>
 						<input type="checkbox" name="force_scale" value="true">Scale images to max<br>
 					</div>
 				</div>
@@ -106,8 +106,8 @@ function showSubmitHtml(){
 				</div>
 			</div>
 			<div id="'. $input_div .'" title="Add imagelinks here, remember they have to end in .jpg, .gif, .png or similar">
-				Image Link(s): <br />
-				<input size="'. $input_field_width .'" type="text" onchange="verifyInput(this)" class="input_field" name="image"><br />
+				Image Link(s): <br>
+				<input size="'. $input_field_width .'" type="text" onchange="verifyInput(this)" class="input_field" name="image"><br>
 			</div>
 			<button type="button" onclick="addLink()">Add More Images</button>
 			<div id="error_box">
