@@ -225,8 +225,7 @@ function drawImages(){
 			allImages[i]._y += allImages[i].speed;
 		}
 		catch(err) {
-			console.log(allImage[i]);
-			console.log(err + ", wierd chrome bug");
+			console.log(err + " occured with: " + allImages[i]);
 		}
 	}
 }
