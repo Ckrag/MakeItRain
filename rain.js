@@ -144,8 +144,9 @@ function applyStyles(){
 function start(){
 	clear();
 	createImage();
-	drawImages();
-	setTimeout(start, 50);
+	if(drawImages()){
+		setTimeout(start, 50);
+	}
 }
 
 function clear() {
@@ -226,7 +227,12 @@ function drawImages(){
 		}
 		catch(err) {
 			console.log(err + " occured with: " + allImages[i]);
+			if(confirm("Bad image url, want to go back and try again?")){
+				window.history.back();
+			};
+			return false;
 		}
 	}
+	return true;
 }
 
