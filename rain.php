@@ -112,9 +112,9 @@ function showSubmitHtml(){
 			<div id="error_box">
 			'. $error_message .'
 			</div>
+			<input value="Start" type="submit" id="start_btn">
 		</form>
-		<input form="editor_form" value="Start" type="submit" id="start_btn">
-		</div>';
+	</div>';
 		
 }
 
