@@ -14,6 +14,10 @@ $regex_pattern = '/([A-Fa-f0-9]{6})$/';
 $size = false;
 $aspect = false;
 
+//php
+$error_wrong = "Error: Your image-links have to be an image file, and end in jpeg, gif, png or similar.";
+$none_image_input = 6; //$none_image_input is a magic number for when the $_GET starts containing image URLs
+
 function make(){
 	if (is_numeric($_GET["size"])){
 		if ($_GET["size"] < 2000){
@@ -53,11 +57,6 @@ function make(){
 	} else {
 		$font_color = "#000000";
 	}
-
-	//php
-	$error_wrong = "Error: Your image-links have to be an image file, and end in jpeg, gif, png or similar.";
-	$none_image_input = 6; //$none_image_input is a magic number for when the $_GET starts containing image URLs
-	$input_field_width = 120; //width of links-input fields (characters)
 
 	////////////////////////////////////////////TEMPLATE SELECTOR////////////////////////////////////
 	if (validateGets()) { //if $_GET isn't empty, validate input
@@ -107,7 +106,7 @@ function showSubmitHtml(){
 			</div>
 			<div id="'. $input_div .'" title="Add imagelinks here, remember they have to end in .jpg, .gif, .png or similar">
 				Image Link(s): <br>
-				<input size="'. $input_field_width .'" type="text" onchange="verifyInput(this)" class="input_field" name="image"><br>
+				<input type="text" onchange="verifyInput(this)" class="input_field" name="image"><br>
 			</div>
 			<button type="button" onclick="addLink()">Add More Images</button>
 			<div id="error_box">
