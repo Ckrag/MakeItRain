@@ -80,9 +80,13 @@ function inputCheck(element, verified){
 		element.setAttribute("style","background-color: "+standard_color+";");
 	}
 }
+*/
 
 function verifyInputFinalize(){
+
+	return true;
 	
+	/*
 	var inputs = document.getElementsByClassName('input_field');
 
 	var valid = true;
@@ -94,8 +98,9 @@ function verifyInputFinalize(){
     }
 
     return valid;
+    */
 }
-*/
+
 
 function displayError(element_id, error, condition){
 	element = document.getElementById(element_id); //have to use string instead of DOM object :(
