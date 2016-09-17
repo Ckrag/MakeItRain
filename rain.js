@@ -194,7 +194,8 @@ function spawnRainObject(){
 	if(image_data[0].length == 0)
 		return;
 
-	var random_index = Math.floor(Math.random()*image_data.length);
+	var random_index = Math.floor(Math.random()*image_data[0].length);
+
 	var rainItem = new RainObject(image_data[0][random_index], image_data[1][random_index], ctx, random_index);
 	rainItem.init();
 	objToAnimate.push(rainItem);
@@ -214,7 +215,13 @@ function RainObject(url, mime, canvas, dataIndex) {
     this.drawObj;
 
     this.init = function(){
-    	if(this.mime == "video/webm"){
+
+    	if(this.mime.indexOf("text/html") !== -1 && this.url.indexOf("gifv") !== -1){
+    		this.url = handleImgurLink(this.url);
+    		//try again!
+    		this.init();
+
+    	} else if(this.mime == "video/webm" || this.mime == "video/mp4" || this.url.indexOf(".mp4") == this.url.length - 4){
     		// Video
     		var video = document.createElement('video');
     		video.src = this.url;
@@ -226,8 +233,6 @@ function RainObject(url, mime, canvas, dataIndex) {
 
     		// We wait for metadata so we know the size
     		video.addEventListener("loadedmetadata", function (e) {
-    			console.log(video.videoWidth);
-
     			video.width = video.videoWidth;
     			video.height = video.videoHeight;
     			obj.drawObj = video;
@@ -252,7 +257,6 @@ function RainObject(url, mime, canvas, dataIndex) {
     }
 
     this.onInitComplete = function(){
-    	console.log("start drawing");
     	this.correctSizing();
     	this.move();
     	this.ready = true;
@@ -286,7 +290,6 @@ function RainObject(url, mime, canvas, dataIndex) {
 				}
 			}
 		} else {
-			console.log(this.drawObj.width);
 			this.y = -this.drawObj.height;
 			this.height = this.drawObj.height;
 			this.width = this.drawObj.width;
@@ -316,7 +319,6 @@ function RainObject(url, mime, canvas, dataIndex) {
 
     		catch(err) {
     			this.isDirty = true;
-				console.log(err + " occured with: " + this.url);
 				if(confirm("Error loading: " + this.url + ", want to go back and try again?")){
 					window.history.back();
 				};
@@ -327,7 +329,6 @@ function RainObject(url, mime, canvas, dataIndex) {
     };
 
     this.move = function(){
-    	console.log("moved!" + objToAnimate.length);
     	this.y += this.speed;
     	var obj = this;
     	if(!this.isDirty)
@@ -354,4 +355,17 @@ function RainObject(url, mime, canvas, dataIndex) {
     	} else
     		this.draw();
     }
+}
+
+function handleImgurLink(url){
+	// we assume all imgur video is mp4
+	var idString = "imgur.com/";
+
+	var fileNameIndex = url.indexOf(idString) + idString.length;
+	var fileName = url.substring(fileNameIndex, url.length);
+
+	//remove ending as well
+	var baseName = fileName.substring(0, fileName.indexOf(".gifv"));
+
+	return "https://i.imgur.com/" + baseName + ".mp4";
 }
