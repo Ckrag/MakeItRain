@@ -200,7 +200,7 @@ function spawnRainObject(){
 	rainItem.init();
 	objToAnimate.push(rainItem);
 
-	setTimeout(function (){ spawnRainObject() }, Math.random()*10000);
+	setTimeout(function (){ spawnRainObject() }, Math.random()*5000);
 }
 
 function RainObject(url, mime, canvas, dataIndex) {
