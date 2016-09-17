@@ -142,11 +142,6 @@ function applyStyles(){
 }
 
 function start(){
-	//clear();
-	//createImage();
-	//if(drawImages()){
-	//	setTimeout(start, 1000 / 30); // 30 fps
-	//}
 	runAnimation();
 }
 
@@ -360,28 +355,3 @@ function RainObject(url, mime, canvas, dataIndex) {
     		this.draw();
     }
 }
-
-/*
-function drawImages(){
-	for (var i = 0; i < allImages.length; i++)
-	{
-		if (allImages[i]._y - 50 > c.height){
-			allImages[i] = null;
-			allImages.splice(i, 1);
-		}
-		try {
-			ctx.drawImage(allImages[i], allImages[i]._x, allImages[i]._y, allImages[i]._width, allImages[i]._height);
-			allImages[i]._y += allImages[i].speed;
-		}
-		catch(err) {
-			console.log(err + " occured with: " + allImages[i]);
-			if(confirm("Bad image url, want to go back and try again?")){
-				window.history.back();
-			};
-			return false;
-		}
-	}
-	return true;
-}
-*/
-
