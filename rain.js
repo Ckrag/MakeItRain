@@ -142,11 +142,12 @@ function applyStyles(){
 }
 
 function start(){
-	clear();
-	createImage();
-	if(drawImages()){
-		setTimeout(start, 50);
-	}
+	//clear();
+	//createImage();
+	//if(drawImages()){
+	//	setTimeout(start, 1000 / 30); // 30 fps
+	//}
+	runAnimation();
 }
 
 function clear() {
@@ -171,12 +172,70 @@ function scaleImage (imageObj, max_value, unknown_axis){
 	}
 }
 
+// ANIMATION MAGIC
+
+
+var objToAnimate = [];
+function runAnimation(){
+	for (var i = 0; i < image_data[0].length; i++) {
+		objToAnimate.push(new RainObject(image_data[0][i], image_data[1][i], ctx));
+	}
+	for (var i = 0; i < objToAnimate.length; i++) {
+		objToAnimate[i].init();
+	}
+	
+}
+
+function RainObject(url, mime, canvas) {
+
+    this.url = url;
+    this.mime = mime;
+
+    this.drawObj;
+
+    this.init = function(){
+    	if(this.mime == "video/webm"){
+    		// Video
+    		var video = document.createElement('video');
+    		video.src = this.url;
+    		video.autoPlay = true;
+    		video.loop = true;
+
+    		this.drawObj = video;    		
+    	} else {
+    		// Default to image
+    		console.log("Not handling images yet!");
+    	}
+    	console.log("start drawing");
+    	this.draw();
+    }
+
+    this.x = 0;
+    this.y = 0;
+    this.width = 400;
+    this.height = 400;
+    this.speed = 10;
+
+    this.draw = function(){
+
+    	obj = this;
+    	clear();
+		ctx.drawImage(this.drawObj, this.x, this.y, this.width, this.height);
+		console.log("DRAW!");
+		//DRAW
+		setTimeout(function (){ obj.draw()}, 100);
+    	
+    };
+}
+
+
+/*
 function createImage(){
 	if (Math.random() > 0.96){
-		var random_image = Math.floor(Math.random()*image_array.length);
+		var random_image = Math.floor(Math.random()*image_data.length);
 		var imageObj = new Image();
 		var y_treshhold = 10;
-		imageObj.src = image_array[random_image];
+		imageObj.src = image_data[random_image];
 		imageObj._x = ((c.width + 600)*Math.random()+1)-300;
 		imageObj.speed = (Math.random()*10)+1
 		if(image_settings){
@@ -235,4 +294,5 @@ function drawImages(){
 	}
 	return true;
 }
+*/
 

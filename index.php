@@ -3,6 +3,7 @@
 	<head>
 		<title>The Image Rain</title>
 		<meta charset="UTF-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script type="text/javascript" src="jscolor/jscolor.js"></script>
 		<script type="text/javascript" src="rain.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -43,7 +44,7 @@
 			var maxNumberOfImages = 100;
 
 
-			var image_array = <?php echo json_encode($image_urls); ?>;
+			var image_data = <?php echo json_encode($image_data); ?>;
 			var ready = <?php echo json_encode($ready); ?>;
 
 			var max_image_size = <?php echo json_encode($max_image_size); ?>;
