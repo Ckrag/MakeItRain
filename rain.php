@@ -5,7 +5,7 @@ $message = nl2br(htmlentities($_GET["message"], ENT_QUOTES, 'UTF-8'));
 
 //js
 //$message = nl2br($_GET["message"]);
-$image_urls;
+$image_data;
 $ready = false;
 $input_div = "link_input";
 $regex_pattern = '/([A-Fa-f0-9]{6})$/';
@@ -15,7 +15,6 @@ $image_settings;
 $force_scale;
 $background_color;
 $font_color;
-$image_urls;
 $error_message;
 
 //image settings
@@ -36,7 +35,7 @@ function make(){
 	global $force_scale;
 	global $background_color;
 	global $font_color;
-	global $image_urls;
+	global $image_data;
 	global $ready;
 	global $error_message;
 	global $regex_pattern;
@@ -83,7 +82,7 @@ function make(){
 
 	////////////////////////////////////////////TEMPLATE SELECTOR////////////////////////////////////
 	if (validateGets()) { //if $_GET isn't empty, validate input
-		$image_urls = createImgArray();
+		$image_data = createImgArray();
 		$ready = true;
 		showContentHtml();
 	} else { //if no $_GET show base template
@@ -149,13 +148,14 @@ function showContentHtml(){
 ////////////////////////////////////////////FUNCTIONS////////////////////////////////////
 
 function createImgArray(){
-	$image_urls = array();
+	$image_data = array(array(),array());
 	foreach($_GET as $key => $value) {
 		if (preg_match("/image/", $key)){
-			array_push($image_urls, $value);
+			array_push($image_data[0], $value);
+			array_push($image_data[1], get_headers($value, 1)["Content-Type"]);
 		}
-	}		
-	return $image_urls;
+	}	
+	return $image_data;
 }
 
 function validateGets() {

@@ -142,11 +142,7 @@ function applyStyles(){
 }
 
 function start(){
-	clear();
-	createImage();
-	if(drawImages()){
-		setTimeout(start, 50);
-	}
+	runAnimation();
 }
 
 function clear() {
@@ -171,68 +167,191 @@ function scaleImage (imageObj, max_value, unknown_axis){
 	}
 }
 
-function createImage(){
-	if (Math.random() > 0.96){
-		var random_image = Math.floor(Math.random()*image_array.length);
-		var imageObj = new Image();
-		var y_treshhold = 10;
-		imageObj.src = image_array[random_image];
-		imageObj._x = ((c.width + 600)*Math.random()+1)-300;
-		imageObj.speed = (Math.random()*10)+1
-		if(image_settings){
+// ANIMATION MAGIC
+
+
+var objToAnimate = [];
+function runAnimation(){
+	spawnRainObject();
+	clearCanvas();
+}
+
+function clearCanvas(){
+	clear();
+	for (var i = objToAnimate.length - 1; i >= 0; i--) {
+		objToAnimate[i].onScreenCleared();
+	}
+	setTimeout(function (){ clearCanvas() }, 20);
+}
+
+function removeImageDataEntry(index){
+	image_data[0].splice(index, 1);
+	image_data[1].splice(index, 1);
+}
+
+function spawnRainObject(){
+	// Nothing to show anyway
+	if(image_data[0].length == 0)
+		return;
+
+	var random_index = Math.floor(Math.random()*image_data.length);
+	var rainItem = new RainObject(image_data[0][random_index], image_data[1][random_index], ctx, random_index);
+	rainItem.init();
+	objToAnimate.push(rainItem);
+
+	setTimeout(function (){ spawnRainObject() }, Math.random()*10000);
+}
+
+function RainObject(url, mime, canvas, dataIndex) {
+
+    this.url = url;
+    this.mime = mime;
+    this.dataIndex = dataIndex;
+
+    this.ready = false;
+    this.isDirty = false;
+
+    this.drawObj;
+
+    this.init = function(){
+    	if(this.mime == "video/webm"){
+    		// Video
+    		var video = document.createElement('video');
+    		video.src = this.url;
+    		video.autoPlay = true;
+    		video.loop = true;
+    		video.volume = 0.0;
+
+    		var obj = this;
+
+    		// We wait for metadata so we know the size
+    		video.addEventListener("loadedmetadata", function (e) {
+    			console.log(video.videoWidth);
+
+    			video.width = video.videoWidth;
+    			video.height = video.videoHeight;
+    			obj.drawObj = video;
+
+    			obj.onInitComplete();
+    		}, false);
+
+    		video.load();
+    		video.play();
+
+    		    		
+    	} else {
+    		// Default to image
+    		var image = new Image();
+    		image.src = this.url;
+
+    		this.drawObj = image;
+
+    		this.onInitComplete();
+    	}
+    	
+    }
+
+    this.onInitComplete = function(){
+    	console.log("start drawing");
+    	this.correctSizing();
+    	this.move();
+    	this.ready = true;
+    }
+
+    this.correctSizing = function(){
+    	if(image_settings){
 			if(force_scale){
 				if(image_aspect == "x") {
-					imageObj._y = -max_image_size-y_treshhold;//
-					imageObj._height = max_image_size; 
-					imageObj._width = scaleImage(imageObj, max_image_size, "x");
+					this.drawObj.y = -max_image_size-this.yThreshhold;//
+					this.height = max_image_size; 
+					this.width = scaleImage(this.drawObj, max_image_size, "x");
 				} else if(image_aspect == "y") {
-					imageObj._y = -imageObj.height-y_treshhold; //
-					imageObj._width = max_image_size;
-					imageObj._height = scaleImage(imageObj, max_image_size, "y");
+					this.drawObj.y = -this.drawObj.height-this.yThreshhold; //
+					this.width = max_image_size;
+					this.height = scaleImage(this.drawObj, max_image_size, "y");
 				}
 			} else {
 				if(image_aspect == "x") {
-					if(imageObj.height > max_image_size){
-						imageObj._y = -max_image_size-y_treshhold; //
-						imageObj._height = max_image_size;
-						imageObj._width = scaleImage(imageObj, max_image_size, "x");
+					if(this.drawObj.height > max_image_size){
+						this.drawObj.y = -max_image_size-this.yThreshhold; //
+						this.height = max_image_size;
+						this.width = scaleImage(this.drawObj, max_image_size, "x");
 					}
 				} else if(image_aspect == "y") {
-					if(imageObj.width > max_image_size){
-						imageObj._y = -imageObj.height-y_treshhold;//
-						imageObj._width = max_image_size;
-						imageObj._height = scaleImage(imageObj, max_image_size, "y");
+					if(this.drawObj.width > max_image_size){
+						this.drawObj.y = -this.drawObj.height-this.yThreshhold;//
+						this.width = max_image_size;
+						this.height = scaleImage(this.drawObj, max_image_size, "y");
 					}
 				}
 			}
 		} else {
-			imageObj._y = -imageObj.height;
-			imageObj._height = imageObj.height;
-			imageObj._width = imageObj.width;
+			console.log(this.drawObj.width);
+			this.y = -this.drawObj.height;
+			this.height = this.drawObj.height;
+			this.width = this.drawObj.width;
 		}
-		allImages.push(imageObj);
-	}
-}
+    }
 
-function drawImages(){
-	for (var i = 0; i < allImages.length; i++)
-	{
-		if (allImages[i]._y - 50 > c.height){
-			allImages[i] = null;
-			allImages.splice(i, 1);
-		}
-		try {
-			ctx.drawImage(allImages[i], allImages[i]._x, allImages[i]._y, allImages[i]._width, allImages[i]._height);
-			allImages[i]._y += allImages[i].speed;
-		}
-		catch(err) {
-			console.log(err + " occured with: " + allImages[i]);
-			if(confirm("Bad image url, want to go back and try again?")){
-				window.history.back();
-			};
+    this.isValid = false;
+    this.x = ((c.width + 600)*Math.random()+1)-300;
+    this.y = -400;
+    this.width = 400;
+    this.height = 400;
+    this.speed = Math.random()*10;
+    this.yTreshhold = 10;
+
+    this.draw = function(){
+
+    	if(this.isOutside()){
+    		this.remove();
+    		return;
+    	};
+
+    	if(this.ready){
+    		//DRAW
+    		try {
+    			ctx.drawImage(this.drawObj, this.x, this.y, this.width, this.height);
+    		}
+
+    		catch(err) {
+    			this.isDirty = true;
+				console.log(err + " occured with: " + this.url);
+				if(confirm("Error loading: " + this.url + ", want to go back and try again?")){
+					window.history.back();
+				};
 			return false;
-		}
-	}
-	return true;
-}
+			}
+    	}
+    	
+    };
 
+    this.move = function(){
+    	console.log("moved!" + objToAnimate.length);
+    	this.y += this.speed;
+    	var obj = this;
+    	if(!this.isDirty)
+    		setTimeout(function (){ obj.move()}, 50);
+    }
+
+    this.isOutside = function(){
+
+    	if(this.y - 50 > c.height)
+    		return true;
+    	return false;
+    }
+
+    this.remove = function(){
+    	var index = objToAnimate.indexOf(this);
+    	objToAnimate.splice(index, 1);
+    }
+
+    this.onScreenCleared = function(){
+    	//pseudo callback
+    	if(this.isDirty){
+    		this.remove();
+    		removeImageDataEntry(this.dataIndex);
+    	} else
+    		this.draw();
+    }
+}
