@@ -183,7 +183,17 @@ function runAnimation(){
 	for (var i = 0; i < objToAnimate.length; i++) {
 		objToAnimate[i].init();
 	}
-	
+
+
+	clearCanvas();
+}
+
+function clearCanvas(){
+	clear();
+	for (var i = objToAnimate.length - 1; i >= 0; i--) {
+		objToAnimate[i].onScreenCleared();
+	}
+	setTimeout(function (){ clearCanvas() }, 20);
 }
 
 function RainObject(url, mime, canvas) {
@@ -200,6 +210,9 @@ function RainObject(url, mime, canvas) {
     		video.src = this.url;
     		video.autoPlay = true;
     		video.loop = true;
+    		video.volume = 0.0;
+    		video.load();
+    		video.play();
 
     		this.drawObj = video;    		
     	} else {
@@ -207,25 +220,50 @@ function RainObject(url, mime, canvas) {
     		console.log("Not handling images yet!");
     	}
     	console.log("start drawing");
-    	this.draw();
+    	this.move();
     }
+
+    this.isValid = false;
 
     this.x = 0;
     this.y = 0;
     this.width = 400;
     this.height = 400;
-    this.speed = 10;
+    this.speed = 2;
 
     this.draw = function(){
 
-    	obj = this;
-    	clear();
-		ctx.drawImage(this.drawObj, this.x, this.y, this.width, this.height);
-		console.log("DRAW!");
-		//DRAW
-		setTimeout(function (){ obj.draw()}, 100);
-    	
+    	if(this.isOutside()){
+    		this.remove();
+    		return;
+    	};
+
+    	//DRAW
+    	ctx.drawImage(this.drawObj, this.x, this.y, this.width, this.height);
     };
+
+    this.move = function(){
+    	this.y += this.speed;
+    	var obj = this;
+    	setTimeout(function (){ obj.move()}, 50);
+    }
+
+    this.isOutside = function(){
+
+    	if(this.y - 50 > c.height)
+    		return true;
+    	return false;
+    }
+
+    this.remove = function(){
+    	var index = objToAnimate.indexOf(this);
+    	objToAnimate.splice(index, 1);
+    }
+
+    this.onScreenCleared = function(){
+    	//pseudo callback
+    	this.draw();
+    }
 }
 
 
